@@ -1,0 +1,133 @@
+<!-- 颜值矩阵分析 — 首页 -->
+<view class="container">
+
+  <!-- 顶部标题区 -->
+  <view class="hero">
+    <text class="hero-title">颜值矩阵分析</text>
+    <text class="hero-sub">AI × 数学 × 审美</text>
+  </view>
+
+  <!-- 偏好选择器（紧凑） -->
+  <view class="pref-bar flex-between" bind:tap="onPrefPickerOpen">
+    <view class="flex-center gap-sm">
+      <text class="pref-icon">🎯</text>
+      <text class="pref-label">{{currentPref}}</text>
+    </view>
+    <view class="flex-center gap-sm">
+      <text class="text-xs text-muted">切换审美视角</text>
+      <text class="arrow">›</text>
+    </view>
+  </view>
+
+  <!-- 偏好选择弹层 -->
+  <view class="pref-modal {{showPrefPicker ? 'show' : ''}}" bind:tap="onPrefPickerClose">
+    <view class="pref-modal-content" catch:tap="{{null}}">
+      <view class="pref-modal-title">选择审美视角</view>
+      <view class="pref-modal-sub">不同偏好会影响同一张脸的评分</view>
+      <scroll-view scroll-y class="pref-scroll">
+        <view
+          wx:for="{{prefList}}"
+          wx:key="*this"
+          class="pref-item {{currentPref === item ? 'active' : ''}}"
+          data-index="{{index}}"
+          bind:tap="onPrefSelect"
+        >
+          <text>{{item}}</text>
+          <text wx:if="{{currentPref === item}}" class="check">✓</text>
+        </view>
+      </scroll-view>
+      <button class="btn-ghost mt-md" bind:tap="goQuestionnaire">🧬 发现你的审美DNA</button>
+      <view class="pref-modal-close" bind:tap="onPrefPickerClose">关闭</view>
+    </view>
+  </view>
+
+  <!-- 图片区 -->
+  <view class="image-zone {{imagePath ? 'has-image' : ''}}">
+    <image
+      wx:if="{{imagePath}}"
+      src="{{imagePath}}"
+      mode="aspectFit"
+      class="preview-image"
+    />
+    <view wx:else class="image-placeholder" bind:tap="chooseImage">
+      <text class="placeholder-icon">📷</text>
+      <text class="placeholder-text">点击拍照或选择照片</text>
+      <text class="placeholder-hint text-xs text-muted">支持 JPG / PNG，推荐正面高清照</text>
+    </view>
+
+    <!-- 重新选择 -->
+    <view wx:if="{{imagePath && status === 'idle' || status === 'precheck_done' || status === 'error'}}" class="rechoose-btn" bind:tap="chooseImage">
+      <text>换一张</text>
+    </view>
+  </view>
+
+  <!-- 预检状态 -->
+  <view wx:if="{{status === 'prechecking'}}" class="card">
+    <view class="flex-center gap-md">
+      <view class="loading-spinner"></view>
+      <text class="text-md text-muted">正在检测图片质量...</text>
+    </view>
+  </view>
+
+  <!-- 预检结果 -->
+  <view wx:if="{{status === 'precheck_done' && precheckResult}}" class="card">
+    <view class="flex-between">
+      <text class="card-title">图片质量</text>
+      <text class="badge {{precheckResult.level === 'good' ? 'badge-grade-a' : 'badge-grade-c'}}">
+        {{precheckResult.level === 'good' ? '合格' : '注意'}}
+      </text>
+    </view>
+    <text class="text-sm" style="color:#9999bb;">{{precheckResult.detail || '图片质量检测完成'}}</text>
+  </view>
+
+  <!-- 分析状态 -->
+  <view wx:if="{{status === 'analyzing'}}" class="card">
+    <view class="flex-col gap-md" style="align-items:center;">
+      <view class="loading-spinner" style="width:80rpx;height:80rpx;border-width:6rpx;"></view>
+      <text class="text-lg" style="color:#e94560;">AI 深度分析中</text>
+      <text class="text-sm text-muted">正在提取面部特征矩阵...</text>
+    </view>
+  </view>
+
+  <!-- 错误信息 -->
+  <view wx:if="{{status === 'error'}}" class="card">
+    <view class="flex-col gap-md" style="align-items:center;">
+      <text style="font-size:60rpx;">😕</text>
+      <text class="text-md" style="color:#ff6b6b;">{{errorMsg}}</text>
+      <view class="flex-center gap-md">
+        <button class="btn-ghost" bind:tap="onRetry">重试</button>
+        <button class="btn-ghost" bind:tap="onRechoose">重新选图</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部操作区 -->
+  <view wx:if="{{status === 'idle' || status === 'precheck_done' || status === 'error'}}" class="action-bar">
+    <button
+      wx:if="{{status === 'precheck_done' || status === 'error'}}"
+      class="btn-primary"
+      bind:tap="doAnalyze"
+      disabled="{{!imagePath}}"
+    >
+      🚀 开始 AI 分析
+    </button>
+
+    <!-- 高级选项 -->
+    <view class="options-row">
+      <view class="option-item flex-between">
+        <text class="text-sm">去除背景</text>
+        <switch checked="{{removeBg}}" bind:change="onRemoveBgToggle" color="#e94560" />
+      </view>
+      <view class="option-item flex-between">
+        <text class="text-sm">快速模式</text>
+        <switch checked="{{quickMode}}" bind:change="onQuickModeToggle" color="#e94560" />
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部说明 -->
+  <view class="footer-note">
+    <text class="text-xs text-muted">分析基于视觉特征矩阵与Hill公式，仅供娱乐参考</text>
+  </view>
+
+</view>

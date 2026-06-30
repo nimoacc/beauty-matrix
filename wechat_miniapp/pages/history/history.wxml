@@ -1,0 +1,84 @@
+<!-- 颜值矩阵分析 — 历史记录页 -->
+<view class="container">
+
+  <!-- 统计概览 -->
+  <view class="stats-card card">
+    <view class="stats-grid">
+      <view class="stat-item">
+        <text class="stat-number">{{stats.total}}</text>
+        <text class="stat-label">分析次数</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-number text-accent">{{stats.avgScore}}</text>
+        <text class="stat-label">平均分</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-number text-gold">{{stats.maxScore}}</text>
+        <text class="stat-label">最高分</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 清空按钮 -->
+  <view wx:if="{{history.length > 0}}" class="clear-row">
+    <view class="btn-ghost" bind:tap="onClearAll" style="padding:12rpx 28rpx;">
+      <text class="text-xs">🗑 清空记录</text>
+    </view>
+  </view>
+
+  <!-- 清空确认弹窗 -->
+  <view class="confirm-modal {{showClearConfirm ? 'show' : ''}}" bind:tap="onCancelClear">
+    <view class="confirm-content" catch:tap="{{null}}">
+      <text class="text-lg" style="margin-bottom:16rpx;">⚠️ 确认清空</text>
+      <text class="text-sm text-muted" style="margin-bottom:24rpx;">所有历史记录将被永久删除</text>
+      <view class="flex-center gap-md">
+        <button class="btn-ghost" bind:tap="onCancelClear">取消</button>
+        <button class="btn-primary" bind:tap="onConfirmClear" style="background:#ff4444;box-shadow:none;">确认清空</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view wx:if="{{history.length === 0}}" class="empty-state">
+    <text class="icon">📋</text>
+    <text class="text-md">暂无分析记录</text>
+    <text class="text-xs text-muted mt-sm">分析几张照片后，结果会出现在这里</text>
+  </view>
+
+  <!-- 历史列表 -->
+  <view wx:else class="history-list">
+    <block wx:for="{{history}}" wx:key="id">
+      <view class="history-item" data-item="{{item}}" bind:tap="onTapItem">
+
+        <!-- 缩略图 -->
+        <image
+          wx:if="{{item.imagePath}}"
+          src="{{item.imagePath}}"
+          mode="aspectFill"
+          class="history-thumb"
+        />
+        <view wx:else class="history-thumb-placeholder">
+          <text>👤</text>
+        </view>
+
+        <!-- 信息 -->
+        <view class="history-info">
+          <text class="history-score text-lg text-accent">{{item.score}}</text>
+          <view class="badge badge-grade-{{item.grade}}">{{item.grade}}级</view>
+          <text class="text-xs text-muted">{{item.timestamp}}</text>
+        </view>
+
+        <!-- 删除 -->
+        <view class="history-delete" data-id="{{item.id}}" catch:tap="onDeleteItem">
+          <text>🗑</text>
+        </view>
+      </view>
+    </block>
+  </view>
+
+  <!-- 底部提示 -->
+  <view wx:if="{{history.length >= 50}}" class="text-xs text-muted" style="text-align:center;padding:20rpx;">
+    最多保存100条记录
+  </view>
+
+</view>

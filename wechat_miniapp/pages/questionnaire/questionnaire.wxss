@@ -1,0 +1,178 @@
+/* 颜值矩阵分析 — 审美问卷样式 */
+
+.question-section {
+  padding: 20rpx 20rpx 0;
+}
+
+/* 进度 */
+.progress-header {
+  padding: 0 10rpx 20rpx;
+}
+
+/* 题目卡片 */
+.question-card {
+  padding: 40rpx 30rpx;
+}
+
+.q-number {
+  font-size: 24rpx;
+  color: #e94560;
+  margin-bottom: 12rpx;
+  font-weight: 700;
+}
+
+.q-text {
+  font-size: 34rpx;
+  font-weight: 600;
+  color: #fff;
+  line-height: 1.6;
+  display: block;
+  margin-bottom: 36rpx;
+}
+
+/* 选项 */
+.options-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.option-item {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  padding: 24rpx 20rpx;
+  background: rgba(255,255,255,0.03);
+  border-radius: 16rpx;
+  border: 2rpx solid transparent;
+  transition: all 0.2s;
+}
+
+.option-item.selected {
+  background: rgba(233,69,96,0.1);
+  border-color: rgba(233,69,96,0.4);
+}
+
+.option-radio {
+  width: 36rpx;
+  height: 36rpx;
+  border-radius: 50%;
+  border: 2rpx solid #555588;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20rpx;
+  color: #e94560;
+  flex-shrink: 0;
+}
+
+.option-radio.checked {
+  border-color: #e94560;
+}
+
+.option-text {
+  flex: 1;
+  font-size: 28rpx;
+  color: #ccccee;
+}
+
+.option-check {
+  font-size: 28rpx;
+  color: #e94560;
+}
+
+/* 导航 */
+.nav-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 30rpx 10rpx;
+}
+
+.nav-buttons .btn-ghost {
+  padding: 16rpx 28rpx;
+}
+
+/* 结果卡片 */
+.result-section {
+  padding: 20rpx;
+}
+
+.result-card {
+  text-align: center;
+  padding: 50rpx 30rpx;
+}
+
+.result-emoji {
+  font-size: 80rpx;
+  display: block;
+  margin-bottom: 16rpx;
+}
+
+.result-title {
+  font-size: 40rpx;
+  font-weight: 800;
+  color: #e94560;
+  display: block;
+  margin-bottom: 36rpx;
+}
+
+.result-best {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12rpx;
+  padding: 30rpx 0;
+  margin-bottom: 30rpx;
+}
+
+.result-preset {
+  font-size: 44rpx;
+  font-weight: 800;
+  background: linear-gradient(135deg, #e94560, #ffd700);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+/* 向量可视化 */
+.vector-viz {
+  margin-bottom: 30rpx;
+}
+
+.vector-row {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  margin-bottom: 16rpx;
+}
+
+.vector-label {
+  width: 120rpx;
+  flex-shrink: 0;
+  text-align: right;
+}
+
+/* 其他匹配 */
+.other-matches {
+  text-align: left;
+  padding-top: 20rpx;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+.other-match-item {
+  padding: 14rpx 0;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+
+/* 操作按钮 */
+.result-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+  margin-top: 30rpx;
+}
+
+.result-actions .btn-primary,
+.result-actions .btn-ghost {
+  text-align: center;
+}

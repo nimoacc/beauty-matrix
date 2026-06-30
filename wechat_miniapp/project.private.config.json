@@ -1,0 +1,7 @@
+{
+  "description": "私有配置（不提交）",
+  "setting": {
+    "compileHotReLoad": true,
+    "urlCheck": false
+  }
+}

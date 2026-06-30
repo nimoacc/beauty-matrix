@@ -1,0 +1,36 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/result/result",
+    "pages/history/history",
+    "pages/questionnaire/questionnaire"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#0a0a1a",
+    "navigationBarTitleText": "颜值矩阵分析",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#0a0a1a",
+    "backgroundTextStyle": "light"
+  },
+  "tabBar": {
+    "color": "#888899",
+    "selectedColor": "#e94560",
+    "backgroundColor": "#12122a",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "分析",
+        "iconPath": "images/tab_scan.png",
+        "selectedIconPath": "images/tab_scan_active.png"
+      },
+      {
+        "pagePath": "pages/history/history",
+        "text": "历史",
+        "iconPath": "images/tab_history.png",
+        "selectedIconPath": "images/tab_history_active.png"
+      }
+    ]
+  },
+  "sitemapLocation": "sitemap.json"
+}

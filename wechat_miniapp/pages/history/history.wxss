@@ -1,0 +1,121 @@
+/* 颜值矩阵分析 — 历史记录页样式 */
+
+/* 统计卡片 */
+.stats-card {
+  margin-top: 30rpx;
+}
+
+.stats-grid {
+  display: flex;
+  justify-content: space-around;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.stat-number {
+  font-size: 48rpx;
+  font-weight: 800;
+  color: #fff;
+}
+
+.stat-label {
+  font-size: 22rpx;
+  color: #6666aa;
+}
+
+/* 清空 */
+.clear-row {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10rpx 30rpx;
+}
+
+/* 确认弹窗 */
+.confirm-modal {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.7);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+.confirm-modal.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.confirm-content {
+  width: 580rpx;
+  background: #141430;
+  border-radius: 24rpx;
+  padding: 50rpx 40rpx;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 历史列表 */
+.history-list {
+  padding: 10rpx 20rpx;
+}
+
+.history-item {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  padding: 20rpx;
+  margin-bottom: 10rpx;
+  background: rgba(255,255,255,0.03);
+  border-radius: 16rpx;
+  border: 1px solid rgba(255,255,255,0.04);
+  position: relative;
+}
+
+.history-thumb {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 14rpx;
+  background: rgba(255,255,255,0.05);
+}
+
+.history-thumb-placeholder {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 14rpx;
+  background: rgba(255,255,255,0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40rpx;
+}
+
+.history-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6rpx;
+}
+
+.history-score {
+  font-weight: 700;
+}
+
+.history-delete {
+  padding: 16rpx;
+  opacity: 0.5;
+  z-index: 2;
+}
+
+.history-delete:active {
+  opacity: 1;
+}

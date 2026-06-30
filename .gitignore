@@ -1,0 +1,46 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+*.egg
+
+# PyInstaller
+build/
+dist/
+*.spec.bak
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Runtime artifacts
+crash_log.txt
+*.log
+
+# Datasets (训练/测试数据，体积大)
+FFHQ/
+ISIC/
+SCUT-FBP5500_v2/
+Reverse_Hill/
+SCUT-FBP5500_v2.zip
+
+# 缓存的人脸图片（从数据集复制）
+stats_output/gender_cnn_cache/
+
+# PyTorch 训练权重（保留 ONNX 推理模型即可）
+*.pth
+
+# PyInstaller 源码解压
+extracted_source/
+
+# 临时/调试文件
+stats_output/*.json
+stats_output/*.csv
+stats_output/*.md

@@ -1,0 +1,158 @@
+<!-- 颜值矩阵分析 — 结果页 -->
+<view class="container">
+
+  <!-- 分数卡片 -->
+  <view class="score-card card">
+    <view class="score-ring {{result.grade}}">
+      <text class="score-number">{{score}}</text>
+      <text class="score-total">/10</text>
+    </view>
+    <view class="score-grade">
+      <text class="grade-text">等级</text>
+      <text class="grade-value badge badge-grade-{{result.grade}}">{{result.grade}}</text>
+    </view>
+    <text class="grade-label">{{gradeLabel}}</text>
+    <text wx:if="{{result.gender}}" class="text-sm text-muted mt-sm">{{genderIcon}} 性别: {{result.gender.gender_label}}</text>
+    <text wx:if="{{result.style}}" class="text-xs text-muted mt-sm">风格: {{result.style.primary_style}}</text>
+    <text wx:if="{{result.pref_name}}" class="text-xs text-muted mt-sm">审美视角: {{result.pref_name}}</text>
+  </view>
+
+  <!-- 化妆模拟 -->
+  <view class="card">
+    <view class="card-title flex-between" bind:tap="onToggleMakeup">
+      <text>💄 化妆模拟</text>
+      <text class="text-xs text-muted">{{showMakeup ? '收起' : '展开'}} ›</text>
+    </view>
+    <view wx:if="{{showMakeup}}" class="makeup-panel">
+      <view class="flex-between mb-sm">
+        <text class="text-sm">化妆强度</text>
+        <text class="text-accent">δ = {{makeupDelta.toFixed(1)}}</text>
+      </view>
+      <slider
+        min="0" max="2.0" step="0.1" value="{{makeupDelta}}"
+        activeColor="#e94560" block-size="20"
+        bind:change="onMakeupSliderChange"
+      />
+      <view class="flex-between text-xs text-muted">
+        <text>素颜</text>
+        <text>淡妆</text>
+        <text>浓妆</text>
+      </view>
+
+      <view wx:if="{{makeupResult}}" class="makeup-result">
+        <view class="flex-between">
+          <view class="flex-col gap-sm" style="align-items:center;">
+            <text class="text-xs text-muted">化妆前</text>
+            <text class="text-lg">{{makeupResult.base_score}}</text>
+          </view>
+          <text class="text-accent" style="font-size:36rpx;">→</text>
+          <view class="flex-col gap-sm" style="align-items:center;">
+            <text class="text-xs text-muted">化妆后</text>
+            <text class="text-lg text-accent">{{makeupResult.adjusted_score}}</text>
+          </view>
+          <view class="badge {{makeupResult.delta_score >= 0 ? 'badge-grade-a' : 'badge-grade-c'}}">
+            {{makeupResult.delta_score >= 0 ? '+' : ''}}{{makeupResult.delta_score}}
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 特征详情 -->
+  <view wx:if="{{result.features}}" class="card">
+    <view class="card-title">📊 特征分析</view>
+    <block wx:for="{{result.features}}" wx:key="index">
+      <view class="feature-row" wx:if="{{item.value !== undefined}}">
+        <view class="flex-between mb-sm">
+          <text class="text-sm">{{item.label || item.key}}</text>
+          <text class="text-sm text-muted">{{item.value}}</text>
+        </view>
+        <view class="progress-bar">
+          <view class="progress-fill" style="width:{{item.value * 10}}%;background:{{item.color || 'linear-gradient(90deg, #e94560, #ff8c42)'}};"></view>
+        </view>
+      </view>
+    </block>
+  </view>
+
+  <!-- 评分分解 -->
+  <view wx:if="{{result.decomposition}}" class="card">
+    <view class="card-title flex-between" bind:tap="onToggleFormula">
+      <text>🧮 评分公式</text>
+      <text class="text-xs text-muted">{{showFormula ? '收起' : '展开'}} ›</text>
+    </view>
+    <view wx:if="{{showFormula}}" class="formula-panel">
+      <text class="text-sm formula-text">{{result.decomposition.hill_formula}}</text>
+      <view class="divider"></view>
+      <view class="decomp-grid">
+        <view class="decomp-item">
+          <text class="text-xs text-muted">det(A)</text>
+          <text class="text-md">{{result.decomposition.det_a}}</text>
+        </view>
+        <view class="decomp-item">
+          <text class="text-xs text-muted">质量Q</text>
+          <text class="text-md">{{result.decomposition.quality}}</text>
+        </view>
+        <view class="decomp-item">
+          <text class="text-xs text-muted">肤质加分</text>
+          <text class="text-md text-gold">+{{result.decomposition.skin_clarity_bonus}}</text>
+        </view>
+        <view class="decomp-item">
+          <text class="text-xs text-muted">肤色加分</text>
+          <text class="text-md text-gold">+{{result.decomposition.skin_tone_bonus}}</text>
+        </view>
+        <view class="decomp-item">
+          <text class="text-xs text-muted">几何加分</text>
+          <text class="text-md text-cyan">+{{result.decomposition.geo_bonus}}</text>
+        </view>
+        <view class="decomp-item">
+          <text class="text-xs text-muted">总分</text>
+          <text class="text-md text-accent" style="font-weight:700;">{{result.decomposition.total}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 偏好对比 -->
+  <view wx:if="{{allPrefScores.length > 0}}" class="card">
+    <view class="card-title flex-between" bind:tap="onTogglePrefCompare">
+      <text>🔄 偏好对比</text>
+      <text class="text-xs text-muted">{{showPrefCompare ? '收起' : '展开'}} ›</text>
+    </view>
+    <view wx:if="{{showPrefCompare}}" class="pref-compare-list">
+      <view
+        wx:for="{{allPrefScores}}"
+        wx:key="name"
+        class="pref-compare-item {{result.pref_name === item.name ? 'highlight' : ''}}"
+      >
+        <text class="text-sm">{{item.name}}</text>
+        <view class="pref-compare-bar">
+          <view class="pref-compare-fill" style="width:{{item.score * 10}}%"></view>
+        </view>
+        <text class="text-sm {{result.pref_name === item.name ? 'text-accent' : 'text-muted'}}">{{item.score}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="action-row">
+    <button class="btn-secondary" bind:tap="goHistory">📋 历史记录</button>
+    <button class="btn-primary" open-type="share">📤 分享好友</button>
+  </view>
+
+  <view class="action-row">
+    <button class="btn-ghost" bind:tap="onSaveShareImage">💾 保存分享图</button>
+  </view>
+
+  <!-- Canvas 分享图 (隐藏) -->
+  <canvas
+    type="2d"
+    id="shareCanvas"
+    style="width:375px;height:280px;position:fixed;top:-9999px;left:-9999px;"
+  ></canvas>
+
+  <!-- 耗时 -->
+  <view wx:if="{{result.elapsed_ms}}" class="text-xs text-muted" style="text-align:center;padding:20rpx;">
+    分析耗时: {{result.elapsed_ms}}ms
+  </view>
+
+</view>

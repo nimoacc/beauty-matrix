@@ -1,0 +1,121 @@
+<!-- 颜值矩阵分析 — 审美偏好问卷 -->
+<view class="container">
+
+  <!-- 加载中 -->
+  <view wx:if="{{status === 'loading'}}" class="flex-center" style="height:60vh;">
+    <view class="flex-col gap-md" style="align-items:center;">
+      <view class="loading-spinner" style="width:80rpx;height:80rpx;border-width:6rpx;"></view>
+      <text class="text-md text-muted">加载问卷中...</text>
+    </view>
+  </view>
+
+  <!-- 答题中 -->
+  <view wx:elif="{{status === 'answering'}}" class="question-section">
+
+    <!-- 进度条 -->
+    <view class="progress-header">
+      <view class="flex-between mb-sm">
+        <text class="text-xs text-muted">第 {{currentIndex + 1}} / {{questions.length}} 题</text>
+        <text class="text-xs text-muted">{{progress}}%</text>
+      </view>
+      <view class="progress-bar" style="height:6rpx;">
+        <view class="progress-fill" style="width:{{progress}}%;background:linear-gradient(90deg,#e94560,#ff8c42);"></view>
+      </view>
+    </view>
+
+    <!-- 题目卡片 -->
+    <view class="card question-card">
+      <view class="q-number">Q{{questions[currentIndex].id}}</view>
+      <text class="q-text">{{questions[currentIndex].text}}</text>
+
+      <!-- 选项 -->
+      <view class="options-list">
+        <view
+          wx:for="{{questions[currentIndex].options}}"
+          wx:key="*this"
+          class="option-item {{answers[currentIndex] === index ? 'selected' : ''}}"
+          data-index="{{index}}"
+          bind:tap="onSelectOption"
+        >
+          <view class="option-radio {{answers[currentIndex] === index ? 'checked' : ''}}">
+            <text wx:if="{{answers[currentIndex] === index}}">●</text>
+          </view>
+          <text class="option-text">{{item}}</text>
+          <view wx:if="{{answers[currentIndex] === index}}" class="option-check">✓</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 导航按钮 -->
+    <view class="nav-buttons">
+      <button
+        class="btn-ghost"
+        bind:tap="onPrev"
+        disabled="{{currentIndex === 0}}"
+      >
+        ← 上一题
+      </button>
+      <text class="text-xs text-muted">{{currentIndex + 1}}/{{questions.length}}</text>
+      <button
+        class="btn-ghost"
+        bind:tap="onNext"
+        disabled="{{answers[currentIndex] < 0 || currentIndex >= questions.length - 1}}"
+      >
+        下一题 →
+      </button>
+    </view>
+
+  </view>
+
+  <!-- 结果 -->
+  <view wx:elif="{{status === 'result' && result}}" class="result-section">
+
+    <!-- 结果卡片 -->
+    <view class="card result-card">
+      <text class="result-emoji">🧬</text>
+      <text class="result-title">你的审美DNA</text>
+
+      <view class="result-best">
+        <text class="text-sm text-muted">最适合你的审美视角</text>
+        <text class="result-preset">{{result.best_preset.name}}</text>
+        <text class="text-xs text-muted">匹配度 {{(result.best_preset.score * 100).toFixed(0)}}%</text>
+      </view>
+
+      <!-- 向量可视化 -->
+      <view wx:if="{{result.user_vector}}" class="vector-viz">
+        <text class="text-xs text-muted mb-sm">审美向量分布</text>
+        <block wx:for="{{result.user_vector}}" wx:key="index">
+          <view class="vector-row">
+            <text class="text-xs vector-label">{{['对称C1','比例C2','年轻C3','独特C4','和谐C5'][index]}}</text>
+            <view class="progress-bar" style="flex:1;">
+              <view class="progress-fill" style="width:{{item * 100}}%;background:{{['#e94560','#ff6b35','#ffd700','#00d4ff','#4ecdc4'][index]}};"></view>
+            </view>
+            <text class="text-xs text-muted">{{(item * 100).toFixed(0)}}%</text>
+          </view>
+        </block>
+      </view>
+
+      <!-- 其他匹配 -->
+      <view wx:if="{{result.all_scores}}" class="other-matches">
+        <text class="text-xs text-muted mb-sm">其他审美匹配度</text>
+        <block wx:for="{{result.all_scores}}" wx:key="name">
+          <view wx:if="{{item.name !== result.best_preset.name}}" class="other-match-item flex-between">
+            <text class="text-sm">{{item.name}}</text>
+            <text class="text-sm text-muted">{{(item.score * 100).toFixed(0)}}%</text>
+          </view>
+        </block>
+      </view>
+    </view>
+
+    <!-- 操作 -->
+    <view class="result-actions">
+      <button class="btn-primary" bind:tap="onApplyPreference">
+        ✅ 应用此审美视角
+      </button>
+      <button class="btn-ghost" bind:tap="onRetry">🔄 重新答题</button>
+      <button class="btn-ghost" bind:tap="goHome">🏠 返回首页</button>
+    </view>
+
+  </view>
+
+</view>
