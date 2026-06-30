@@ -26,6 +26,7 @@ PREFERENCE_PRESETS: dict[str, list[float]] = {
 }
 SKIN_CLARITY_WEIGHTS: dict[str, float] = cast(dict[str, float], _CFG['skin_clarity_weights'])
 SKIN_TONE_WEIGHTS: dict[str, float] = cast(dict[str, float], _CFG['skin_tone_weights'])
+GEO_CLARITY_WEIGHTS: dict[str, float] = cast(dict[str, float], _CFG['geo_clarity_weights'])
 GRADES: list[dict[str, Any]] = cast(list[dict[str, Any]], _CFG['grades'])
 
 # ═══ v44 评分公式参数 ═══
@@ -1389,10 +1390,11 @@ def compute_all_preference_scores(feats: FaceFeatures, geo_dims: GeoDimensions |
         
         skin_w = SKIN_CLARITY_WEIGHTS.get(pref_name, 1.0)
         tone_w = SKIN_TONE_WEIGHTS.get(pref_name, 0.0)
+        geo_w = GEO_CLARITY_WEIGHTS.get(pref_name, 1.0)
         
         skin_b = skin_clarity_bonus(feats.skin_clarity, pref_skin=skin_w)
         tone_b = skin_tone_affinity_bonus(feats.skin_tone_label, tone_w)
-        geo_b = geo_clarity_bonus(geo_dims) if geo_dims and geo_dims.available else 0.0
+        geo_b = geo_clarity_bonus(geo_dims, pref_weight=geo_w) if geo_dims and geo_dims.available else 0.0
         
         total = round(min(beauty + skin_b + tone_b + geo_b, 10.0), 2)
         
@@ -1754,9 +1756,10 @@ def batch_analyze_images(
             # v49 完整加减分链: 肤质 + 肤色 + 几何 - 瑕疵
             skin_w = SKIN_CLARITY_WEIGHTS.get(pref_name, 1.0)
             tone_w = SKIN_TONE_WEIGHTS.get(pref_name, 0.0)
+            geo_w = GEO_CLARITY_WEIGHTS.get(pref_name, 1.0)
             skin_b = skin_clarity_bonus(feats.skin_clarity, pref_skin=skin_w)
             tone_b = skin_tone_affinity_bonus(feats.skin_tone_label, tone_w)
-            geo_b = geo_clarity_bonus(geo_dims)
+            geo_b = geo_clarity_bonus(geo_dims, pref_weight=geo_w)
             blemish_p = blemish_penalty(feats.blemish_score)
             total_score = round(min(beauty + skin_b + tone_b + geo_b - blemish_p, 10.0), 2)
 

@@ -51,66 +51,77 @@ preference_presets:
     weights: [1.0, 1.0, 1.0, 1.0, 1.0]
     skin_clarity_weight: 1.0
     skin_tone_weight: 0.0
+    geo_clarity_weight: 1.0
     description: "标准均衡审美，无偏好倾斜"
 
   对称至上:
     weights: [2.0, 1.0, 0.8, 0.6, 1.0]
     skin_clarity_weight: 1.2
     skin_tone_weight: 0.2
+    geo_clarity_weight: 1.3
     description: "极度重视面部对称性"
 
   比例至上:
     weights: [1.0, 2.0, 0.8, 0.6, 1.0]
     skin_clarity_weight: 1.0
     skin_tone_weight: 0.1
+    geo_clarity_weight: 1.5
     description: "极度重视三庭五眼黄金比例"
 
   青春至上:
     weights: [0.8, 0.8, 2.0, 0.6, 1.0]
     skin_clarity_weight: 1.5
     skin_tone_weight: 0.5
+    geo_clarity_weight: 0.8
     description: "最喜欢年轻感、婴儿肥特征"
 
   韩系精致:
     weights: [1.2, 1.2, 1.5, 0.8, 1.2]
     skin_clarity_weight: 1.4
     skin_tone_weight: 0.4
+    geo_clarity_weight: 1.2
     description: "偏好韩式精致白皙风格"
 
   日系自然:
     weights: [0.9, 0.9, 1.0, 1.5, 1.2]
     skin_clarity_weight: 0.8
     skin_tone_weight: 0.1
+    geo_clarity_weight: 0.6
     description: "偏好日系自然独特风格"
 
   欧美飒爽:
     weights: [1.0, 1.0, 0.7, 2.0, 0.9]
     skin_clarity_weight: 0.7
     skin_tone_weight: -0.2
+    geo_clarity_weight: 0.7
     description: "偏好棱角分明、气场强大"
 
   古典东方:
     weights: [1.2, 1.3, 0.9, 0.8, 1.3]
     skin_clarity_weight: 1.0
     skin_tone_weight: 0.3
+    geo_clarity_weight: 1.1
     description: "偏好古典东方含蓄美"
 
   温柔治愈:
     weights: [0.9, 1.0, 1.2, 0.7, 1.4]
     skin_clarity_weight: 1.1
     skin_tone_weight: 0.3
+    geo_clarity_weight: 0.6
     description: "偏好柔和温暖的长相"
 
   英气俊朗:
     weights: [1.3, 1.1, 0.8, 1.8, 0.9]
     skin_clarity_weight: 0.8
     skin_tone_weight: -0.1
+    geo_clarity_weight: 0.9
     description: "偏好干练英气风格"
 
   高级超模:
     weights: [1.0, 1.0, 0.6, 2.0, 0.7]
     skin_clarity_weight: 0.5
     skin_tone_weight: -0.3
+    geo_clarity_weight: 0.5
     description: "偏好T台超模的高级感"
 
 # ── 肤质/肤色权重映射 ──
@@ -139,6 +150,20 @@ skin_tone_weights:
   温柔治愈: 0.3
   英气俊朗: -0.1
   高级超模: -0.3
+
+# ── 几何美学维度权重 (v53.7: 独立于肤质/肤色, 控制面宽比审美偏好) ──
+geo_clarity_weights:
+  均衡审美: 1.0
+  对称至上: 1.3
+  比例至上: 1.5
+  青春至上: 0.8
+  韩系精致: 1.2
+  日系自然: 0.6
+  欧美飒爽: 0.7
+  古典东方: 1.1
+  温柔治愈: 0.6
+  英气俊朗: 0.9
+  高级超模: 0.5
 
 # ── 等级划分 ──
 grades:

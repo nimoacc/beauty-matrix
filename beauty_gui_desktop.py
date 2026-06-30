@@ -1719,17 +1719,19 @@ class BeautyGUI(ctk.CTk):
 
                 skin_w = SKIN_CLARITY_WEIGHTS.get(self.current_pref, 1.0)
                 tone_w = SKIN_TONE_WEIGHTS.get(self.current_pref, 0.0)
+                geo_w = GEO_CLARITY_WEIGHTS.get(self.current_pref, 1.0)
                 skin_b = skin_clarity_bonus(feats.skin_clarity, pref_skin=skin_w)
                 tone_b = skin_tone_affinity_bonus(feats.skin_tone_label, tone_w)
                 blemish_p = blemish_penalty(feats.blemish_score)
-                # v53.1: 几何美学加分 (此前遗漏)
-                geo_dims = compute_geo_dimensions(img, single_rect)
-                geo_b = geo_clarity_bonus(geo_dims, pref_weight=skin_w)
+                # v53.7: 几何美学加分 (MediaPipe关键点解剖学面宽比)
+                landmarks_img = extract_face_landmarks(img, (fx, fy, fw, fh))
+                geo_dims = compute_geo_dimensions(img, single_rect, landmarks=landmarks_img)
+                geo_b = geo_clarity_bonus(geo_dims, pref_weight=geo_w)
                 total = round(min(beauty + skin_b + tone_b + geo_b - blemish_p, 10.0), 2)
 
                 grade = get_grade(total)
                 style = features_to_style(feats)
-                all_scores = compute_all_preference_scores(feats)
+                all_scores = compute_all_preference_scores(feats, geo_dims)
                 advice = generate_beauty_advice(feats, self.current_pref, top_n=3)
                 # v48: 缺陷/增值判定
                 defects = diagnose_defects(feats, total, self.current_pref)
@@ -1968,9 +1970,9 @@ class BeautyGUI(ctk.CTk):
             ("det(A)矩阵秩", f"{r['det_val']:.4f}"),
             ("基础美学分", f"{r['beauty']:.2f}"),
             ("特征质量", f"{r['quality']}"),
-            ("肤质加分", f"+{r['skin_bonus']:.2f}"),
-            ("肤色加分", f"+{r['tone_bonus']:.2f}"),
-            ("几何加分", f"+{r.get('geo_bonus', 0):.2f}"),          # v53.1
+            ("肤质加分", f"{r['skin_bonus']:+.2f}"),
+            ("肤色加分", f"{r['tone_bonus']:+.2f}"),
+            ("几何加分", f"{r.get('geo_bonus', 0):+.2f}"),          # v53.1
             ("瑕疵扣分", f"-{r['blemish_penalty']:.2f}"),
             ("最终总分", f"{r['total']:.2f} / 10"),
         ]
@@ -2452,11 +2454,12 @@ class BeautyGUI(ctk.CTk):
                     beauty = raw_to_beauty(det_val, quality=quality)
                     skin_w = SKIN_CLARITY_WEIGHTS.get(pref_name, 1.0)
                     tone_w = SKIN_TONE_WEIGHTS.get(pref_name, 0.0)
-                    # v53.5: 批量分析补充geo_bonus (MediaPipe 关键点解剖学面宽比)
+                    geo_w = GEO_CLARITY_WEIGHTS.get(pref_name, 1.0)
+                    # v53.7: 批量分析补充geo_bonus (MediaPipe 关键点解剖学面宽比)
                     from image_utils import extract_face_landmarks as _extract_lm2
                     landmarks_img = _extract_lm2(img, face_rects[0])
                     geo_dims = compute_geo_dimensions(img, face_rects, landmarks=landmarks_img)
-                    geo_b = geo_clarity_bonus(geo_dims, pref_weight=skin_w)
+                    geo_b = geo_clarity_bonus(geo_dims, pref_weight=geo_w)
                     blemish_p = blemish_penalty(feats.blemish_score)
                     total = round(min(beauty + skin_clarity_bonus(feats.skin_clarity, skin_w) +
                                      skin_tone_affinity_bonus(feats.skin_tone_label, tone_w) +
